@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import domain.in.config.custom.CaptchaValidator;
+import domain.in.config.jwt.JwtUtil;
 import domain.in.dto.AuthenticationRequest;
 import domain.in.exception.InvalidCaptchaException;
-import domain.in.jwtconfig.JwtUtil;
-import domain.in.securityconfig.CaptchaValidator;
 import domain.in.service.UserService;
 
 @RestController
-@RequestMapping("/apiAuth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
 
 	private final AuthenticationManager authManager;

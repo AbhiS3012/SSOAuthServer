@@ -1,4 +1,4 @@
-package domain.in.jwtconfig;
+package domain.in.config.jwt;
 
 import java.io.IOException;
 

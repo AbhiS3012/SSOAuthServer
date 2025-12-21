@@ -1,4 +1,4 @@
-package domain.in.securityconfig;
+package domain.in.config.custom;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;

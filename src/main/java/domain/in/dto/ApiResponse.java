@@ -3,7 +3,7 @@ package domain.in.dto;
 import lombok.Data;
 
 @Data
-public class ErrorResponse {
+public class ApiResponse {
 
 	private final String error;
 

@@ -1,4 +1,4 @@
-package domain.in.securityconfig;
+package domain.in.config.custom;
 
 import java.util.Map;
 
