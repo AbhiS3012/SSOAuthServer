@@ -5,30 +5,29 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-	private final UserDetailsService userDetailsService;
-	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final CustomUserDetailService userDetailsService;
+	private final PasswordEncoder passwordEncoder;
 
-	public CustomAuthenticationProvider(UserDetailsService userDetailsService) {
+	public CustomAuthenticationProvider(CustomUserDetailService userDetailsService, PasswordEncoder passwordEncoder) {
 		this.userDetailsService = userDetailsService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
 	protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 
-        try {
-            return userDetailsService.loadUserByUsername(username);
-        } catch (Exception e) {
-            throw new BadCredentialsException("User not found with username: " + username, e);
-        }
+		try {
+			return userDetailsService.loadUserByUsername(username);
+		} catch (Exception e) {
+			throw new BadCredentialsException("User not found with username: " + username, e);
+		}
 	}
 
 	@Override

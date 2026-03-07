@@ -1,7 +1,7 @@
 package domain.in.model;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,8 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
@@ -28,18 +26,20 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
-	private Integer id;
+	private Long id;
 
-	@Column(name = "username", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	private String username;
 
-	@Column(name = "password", nullable = false)
+	@Column(nullable = false)
 	private String password;
 
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false, name = "created_at")
-	private Date createdAt;
+	private LocalDateTime createdAt;
+
+//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private List<RefreshToken> refreshTokens = new ArrayList<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,4 +76,3 @@ public class User implements UserDetails {
 		return true;
 	}
 }
-

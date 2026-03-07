@@ -1,7 +1,7 @@
 package domain.in.config.jwt;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -54,13 +54,16 @@ public class JwtUtil {
 
 	// *********************** Generate Token **************************
 	public String generateToken(UserDetails userDetails) {
-		HashMap<String, Object> claims = new HashMap<String, Object>();
-		return createToken(claims, userDetails.getUsername());
+		return createToken(Map.of(), userDetails.getUsername());
 	}
 
-	private String createToken(HashMap<String, Object> claims, String userName) {
-		return Jwts.builder().claims(claims).subject(userName).issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + expirationMs)).signWith(getSignInKey()).compact();
+	private String createToken(Map<String, Object> claims, String userName) {
+		return Jwts.builder()
+				.claims(claims)
+				.subject(userName)
+				.issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + expirationMs))
+				.signWith(getSignInKey()).compact();
 	}
 
 	private SecretKey getSignInKey() {

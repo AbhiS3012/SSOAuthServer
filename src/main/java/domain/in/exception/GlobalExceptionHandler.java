@@ -1,6 +1,5 @@
 package domain.in.exception;
 
-import domain.in.dto.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -9,9 +8,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import domain.in.dto.ApiResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ExceptionHandler(InvalidCaptchaException.class)
