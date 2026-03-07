@@ -18,7 +18,7 @@ services:
 
   app:
     image: ssoauthserver:1.0
-    container_name: springboot-app
+    container_name: ssoauthserver-app
     depends_on:
       mysql:
         condition: service_healthy
