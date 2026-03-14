@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-	
+
 	private static final String COOKIE_NAME = "access_token";
 
 	private final CustomUserDetailService userDetailsService;
@@ -34,55 +34,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		final String authorizationHeader = request.getHeader("Authorization");
+		String jwt = extractToken(request);
 
-		String userName = null;
-		String jwt = null;
+		if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-		// Try to get JWT from Authorization header
-		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-			jwt = authorizationHeader.substring(7);
 			try {
-				userName = jwtUtil.extractUserName(jwt);
+				String username = jwtUtil.extractUsername(jwt);
+
+				if (username != null) {
+					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+					if (jwtUtil.validateToken(jwt, userDetails)) {
+
+						UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+								userDetails, null, userDetails.getAuthorities());
+
+						usernamePasswordAuthenticationToken
+								.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+						SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					}
+				}
+
 			} catch (Exception e) {
-				e.printStackTrace();
+
 			}
 		}
 
-		// If not found, try to get JWT from cookie (e.g., 'sso_token')
-		if (jwt == null && request.getCookies() != null) {
+		filterChain.doFilter(request, response);
+	}
+
+	public String extractToken(HttpServletRequest request) {
+
+		final String authorizationHeader = request.getHeader("Authorization");
+
+		// Check header
+		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+			return authorizationHeader.substring(7);
+		}
+
+		// Check cookie
+		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (COOKIE_NAME.equals(cookie.getName())) {
-					jwt = cookie.getValue();
-					break;
+					return cookie.getValue();
 				}
 			}
 		}
 
-		// Extract username and validate token
-		if (jwt != null) {
-			try {
-				userName = jwtUtil.extractUserName(jwt);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-
-			if (jwtUtil.validateToken(jwt, userDetails)) {
-
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-
-				usernamePasswordAuthenticationToken
-						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-			}
-		}
-		filterChain.doFilter(request, response);
+		return null;
 	}
 
 }
