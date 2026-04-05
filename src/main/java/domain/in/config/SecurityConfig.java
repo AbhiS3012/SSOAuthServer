@@ -16,9 +16,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import domain.in.config.custom.CustomAuthenticationProvider;
 import domain.in.config.jwt.JwtAuthenticationEntryPoint;
 import domain.in.config.jwt.JwtAuthenticationFilter;
+import domain.in.security.CustomAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +43,7 @@ public class SecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/login", "/api/auth/login", "/images/SSOLogo.png")
+						.requestMatchers("/login", "/api/auth/login", "/api/session/validate", "/images/SSOLogo.png")
 						.permitAll().anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))

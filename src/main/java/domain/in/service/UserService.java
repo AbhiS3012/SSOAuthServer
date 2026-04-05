@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import domain.in.dto.AuthenticationRequest;
+import domain.in.dto.RegisterRequest;
 import domain.in.model.User;
 import domain.in.repository.UserRepository;
 
@@ -19,14 +19,15 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public void save(AuthenticationRequest request) {
+	public void save(RegisterRequest request) {
 		// Encode the raw password before saving
 		String encodedPassword = passwordEncoder.encode(request.getPassword());
 
 		User user = new User();
 		user.setUsername(request.getUsername());
 		user.setPassword(encodedPassword);
-
+		user.setEmail(request.getEmail());
+		
 		repository.save(user);
 	}
 

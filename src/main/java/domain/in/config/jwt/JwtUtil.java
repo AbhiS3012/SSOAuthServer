@@ -2,7 +2,6 @@ package domain.in.config.jwt;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -60,10 +59,7 @@ public class JwtUtil {
 
 	private String createToken(Map<String, Object> claims, String userName) {
 		
-		String jwtId = UUID.randomUUID().toString();
-		
 		return Jwts.builder()
-				.id(jwtId)
 				.claims(claims)
 				.subject(userName)
 				.issuedAt(new Date(System.currentTimeMillis()))
@@ -74,11 +70,6 @@ public class JwtUtil {
 	private SecretKey getSignInKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(secret);
 		return Keys.hmacShaKeyFor(keyBytes);
-	}
-
-	// *********************** Extract JTI **************************
-	public String extractJti(String token) {
-		return extractClaim(token, Claims::getId);
 	}
 
 }

@@ -34,12 +34,12 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 
+	@Column(nullable = false)
+	private String email;
+
 	@CreationTimestamp
 	@Column(updatable = false, name = "created_at")
 	private LocalDateTime createdAt;
-
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private List<RefreshToken> refreshTokens = new ArrayList<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
